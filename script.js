@@ -11,11 +11,9 @@ const commits = stdout.split("\n").filter(line => line !== "").map(line => {
 	return {hash, name: nameArray.join(" ")}
 })
 
+await execAsync("mkdir ../folderify-steps")
 for (const commit of commits) {
 	await execAsync(`git checkout ${commit.hash}`)
-	console.log(await execAsync("git status"))
-	console.log('---', commit.name)
-	await execAsync(`git checkout main`)
+	await execAsync(`cp -r . ../folderify-steps/${commit.name}`)
 }
-
-console.log(commits)
+await execAsync(`git checkout main`)
