@@ -11,7 +11,8 @@ const commits = stdout.split("\n").filter(line => line !== "").map(line => {
 	return {hash, name: nameArray.join(" ")}
 })
 
-const { stdout: currentFolder } = await execAsync('echo "${PWD##*/}"')
+const { stdout: pwdResult } = await execAsync('echo "${PWD##*/}"')
+const currentFolder = pwdResult.replace("\n", "").trim()
 
 await execAsync(`mkdir ../${currentFolder}-steps`)
 for (const commit of commits) {
