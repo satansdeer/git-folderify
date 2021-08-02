@@ -17,7 +17,7 @@ const currentFolder = pwdResult.replace("\n", "").trim()
 await execAsync(`mkdir ../${currentFolder}-steps`)
 for (const commit of commits) {
 	await execAsync(`git checkout ${commit.hash}`)
-	await execAsync(`cp -r . ../folderify-steps/${commit.name}`)
+	await execAsync(`rsync -rv --exclude-from=./.gitignore . ../folderify-steps/${commit.name}`)
 }
 await execAsync(`git checkout main`)
 await execAsync(`mv ../${currentFolder}-steps .`)
