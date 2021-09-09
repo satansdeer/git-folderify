@@ -2,6 +2,9 @@
   "name": "folderify",
   "version": "1.0.0",
   "description": "",
+	"bin": {
+		"folderify": "./script.js"
+	},
   "main": "index.js",
 	"type": "module",
   "scripts": {
