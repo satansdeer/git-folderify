@@ -26,12 +26,12 @@ const commits = stdout
     return { hash, name: nameArray.join(" ") };
   });
 
+const { stdout: branch } = await execAsync('git branch | grep \*')
+const branchName = branch.split("* ")[1]
+
 await execAsync(
   'cat .gitignore > ignorefile.txt && echo ".git\nignorefile.txt" >> ignorefile.txt'
 );
-
-const { stdout: ignorefile } = await execAsync("cat ignorefile.txt");
-console.log(ignorefile)
 
 for (const commit of commits) {
   console.log(commit.name);
@@ -42,4 +42,4 @@ for (const commit of commits) {
 }
 await execAsync(`cat ignorefile.txt`);
 await execAsync(`rm ignorefile.txt`);
-await execAsync(`git checkout main`);
+await execAsync(`git checkout ${branchName}`);
