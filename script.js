@@ -26,7 +26,7 @@ const commits = stdout
     return { hash, name: nameArray.join(" ") };
   });
 
-const { stdout: branch } = await execAsync('git branch | grep \*')
+const { stdout: branch } = await execAsync('git branch | grep \\*')
 const branchName = branch.split("* ")[1]
 
 await execAsync(
