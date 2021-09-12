@@ -10,7 +10,7 @@ const outFolder = process.argv[2];
 
 if (!outFolder) {
   console.log("Missing destination folder");
-  process.exitCode = 1;
+  process.exit()
 }
 
 const { stdout, stderr } = await execAsync("git log --oneline");
