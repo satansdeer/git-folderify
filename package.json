@@ -1,11 +1,11 @@
 {
-  "name": "folderify",
+  "name": "git-folderify",
   "version": "0.0.4",
   "description": "",
 	"bin": {
-		"folderify": "./script.js"
+		"git-folderify": "./script.js"
 	},
-  "main": "index.js",
+  "main": "script.js",
 	"type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
