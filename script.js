@@ -1,25 +1,45 @@
 #!/usr/bin/env node
 
-import { promisify } from "util"
-import { exec } from "child_process"
-const execAsync = promisify(exec)
+import { promisify } from "util";
+import { exec } from "child_process";
+const execAsync = promisify(exec);
 
-const { stdout, stderr } = await execAsync("git log --oneline")
-if(!stdout){
-	throw(stderr)
+console.log(process.argv[2]);
+
+const outFolder = process.argv[2];
+
+if (!outFolder) {
+  console.log("Missing destination folder");
+  process.exitCode = 1;
 }
-const commits = stdout.split("\n").filter(line => line !== "").map(line => {
-	const [hash, ...nameArray] = line.split(" ")
-	return {hash, name: nameArray.join(" ")}
-})
 
-const { stdout: pwdResult } = await execAsync('echo "${PWD##*/}"')
-const currentFolder = pwdResult.replace("\n", "").trim()
+const { stdout, stderr } = await execAsync("git log --oneline");
+if (!stdout) {
+  throw stderr;
+}
 
-await execAsync(`mkdir ../${currentFolder}-steps`)
+const commits = stdout
+  .split("\n")
+  .filter((line) => line !== "")
+  .map((line) => {
+    const [hash, ...nameArray] = line.split(" ");
+    return { hash, name: nameArray.join(" ") };
+  });
+
+await execAsync(
+  'cat .gitignore > ignorefile.txt && echo ".git\nignorefile.txt" >> ignorefile.txt'
+);
+
+const { stdout: ignorefile } = await execAsync("cat ignorefile.txt");
+console.log(ignorefile)
+
 for (const commit of commits) {
-	await execAsync(`git checkout ${commit.hash}`)
-	await execAsync(`rsync -rv --exclude-from=./.gitignore . ../folderify-steps/${commit.name}`)
+  console.log(commit.name);
+  await execAsync(`git checkout ${commit.hash}`);
+  await execAsync(
+    `rsync -rv --exclude-from=ignorefile.txt . ${outFolder}/${commit.name}`
+  );
 }
-await execAsync(`git checkout main`)
-await execAsync(`mv ../${currentFolder}-steps .`)
+await execAsync(`cat ignorefile.txt`);
+await execAsync(`rm ignorefile.txt`);
+await execAsync(`git checkout main`);
